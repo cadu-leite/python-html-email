@@ -183,6 +183,8 @@ https://github.com/peterbe/premailer
 
 
 
-.. |badge_coverage| .. image:: https://codecov.io/gh/cadu-leite/python-html-email/branch/main/graph/badge.svg?token=SCR7OQwsyb
+.. |badge_coverage| image:: https://codecov.io/gh/cadu-leite/python-html-email/branch/main/graph/badge.svg?token=SCR7OQwsyb
     :target: https://codecov.io/gh/cadu-leite/python-html-email
     :alt: code coverage
+
+
