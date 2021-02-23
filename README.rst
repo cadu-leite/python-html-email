@@ -1,7 +1,15 @@
-
 *****************
 Python Email HTML
 *****************
+
+
++------------------------+----------------------+--------------------+---------------------+
+| Pypi Version           | Doc Status           | Coverage           | Downloads           |
++========================+======================+====================+=====================+
+|  no pack               |  no docs             |  |badge_coverage|  |  no pypo yet        |
++------------------------+----------------------+--------------------+---------------------+
+
+
 
 Envio de email com conteúdo HTML e imagens.
 
@@ -173,3 +181,8 @@ https://github.com/lavr/python-emails
 https://github.com/aspineux/pyzmail/
 https://github.com/peterbe/premailer
 
+
+
+.. |badge_coverage| .. image:: https://codecov.io/gh/cadu-leite/python-html-email/branch/main/graph/badge.svg?token=SCR7OQwsyb
+    :target: https://codecov.io/gh/cadu-leite/python-html-email
+    :alt: code coverage
