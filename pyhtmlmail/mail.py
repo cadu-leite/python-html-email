@@ -4,6 +4,7 @@ import smtplib
 import sys
 import re
 import os
+import csv
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -23,7 +24,7 @@ class EmailMsg():
         self.from_sender = None  # The email account used to send
 
         self.to_recipient = None  # list of receivers
-        self.to_recipients_file = None  # list of receivers
+        self.mailtolistfile = None  # list of receivers
 
         self.subject = None  # the email subject
         self.content_html = None  # user raw HTML content
@@ -35,6 +36,8 @@ class EmailMsg():
         self._content_html_cleaned = None  # html content parse result
         self._msg = None  # the instance of MIMEMultipart
         self._content_html_file = None  # html content file path
+        # self._mailtolist = None  # recipients list
+        self._mailtolistfile = None
 
         self._msg = MIMEMultipart()  # initiate the instance of MIMEMultipart - crap
 
@@ -77,6 +80,29 @@ class EmailMsg():
         if path:
             with open(path, 'r') as f:
                 self.content_html = f.read()
+
+    @property
+    def mailtolistfile(self):
+        """file PATH pointing to html content file.
+
+        Returns:
+            str: a file path copy from internal  :attr:`_content_html_file` property
+        """
+        return self._mailtolistfile
+
+    @mailtolistfile.setter
+    def mailtolistfile(self, path):
+        '''
+        get list from recipients file
+        '''
+        rcps = []
+        if path:
+            self._mailtolistfile = path
+            with open(self._mailtolistfile, mode='r') as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=';', quotechar='"')
+                for row in csv_reader:
+                    rcps.append(row[0])
+            self.to_recipient = rcps
 
     def set_images_cids(self):
         '''Parse the html content (:attr:`content_html` property)

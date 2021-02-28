@@ -46,6 +46,13 @@ def command_line_parser(sys_args):
     )
 
     parser.add_argument(
+        '-u', '--mailtolistfile',
+        type=str,
+        required=False,
+        help='recipients list file'
+    )
+
+    parser.add_argument(
         '-x', '--contenttext',
         type=str,
         required=False,
