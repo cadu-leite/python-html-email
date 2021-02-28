@@ -4,6 +4,7 @@ import smtplib
 import sys
 import re
 import os
+import csv
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

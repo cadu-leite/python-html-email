@@ -50,7 +50,13 @@ Mr Guido van Rossum; guido.rossum@mailcom; Mail to the creator of Python Languag
 Ms Jane Austen; jane.proud@mail.com; Mail to a great writer and thinker
 '''
 
-class TestClass(unittest.TestCase):
+RECIPENTS_LIST = [
+    'w.yeats@mail.com', 'irineu.souza@mail.com', 'ada.love@mail.com',
+    'sebastiao.melo@mail.com', 'guido.rossum@mailcom', 'jane.proud@mail.com',
+]
+
+
+class TestCore(unittest.TestCase):
 
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
@@ -154,4 +160,70 @@ class TestClass(unittest.TestCase):
             print('==============')
             print(csvfile.read())
 
+
+class TestRecipientsListFile(unittest.TestCase):
+    '''
+    Recipients_list_file tests
+    '''
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        # deletes the temp dir (and all content)
+        shutil.rmtree(self.temp_dir, ignore_errors=True)
+
+
+    def test_recipients_list_file_option_not_set(self):
+        '''
+        Argparse option -u (--mailtolistfile) NOT SET works
+        '''
+        opt = __main__.command_line_parser([
+            '-o', '5', '-p', '123', '-s',  # required
+            'password', '-f', 'mailfrom@mail.com',  # required
+
+        ])
+        self.assertEqual(opt.mailtolistfile, None)
+
+    def test_recipients_list_file_option(self):
+        '''
+        Argparse option -u (--mailtolistfile) works
+        '''
+
+        opt = __main__.command_line_parser([
+            '-o', '5', '-p', '123', '-s',  # required
+            'password', '-f', 'mailfrom@mail.com',  # required
+            '-u', 'mailtolist.txt',
+        ])
+
+        self.assertEqual(opt.mailtolistfile, 'mailtolist.txt')
+
+    def test_mailtolistfile_setter_is_called(self):
+        '''
+        Check mailtolistfile SETTER is called when mailtolistfile is set
+        '''
+        with mock.patch('pyhtmlmail.mail.EmailMsg.mailtolistfile', new_callable=mock.PropertyMock) as mailtolistfile_patched:
+            emsg = EmailMsg()
+            mailtolistfile_patched.reset_mock()
+            emsg.mailtolistfile = 'temp.txt'
+            mailtolistfile_patched.assert_called()
+
+    def test_recipients_list_file_parser(self):
+        '''
+        Recipients list read from file
+
+        # csv File ...
+            mailname01@mail.com
+            mailname02@mail.com
+            ...
+            mailname03@mail.com
+        '''
+        temp_csv_file = path.join(self.temp_dir, 'temp_addresses.csv')
+        with open(temp_csv_file, mode='w') as csv_file:
+            csv_writer = csv.writer(csv_file, delimiter=' ', quotechar='"')
+            for item in RECIPENTS_LIST:
+                csv_writer.writerow([item, ])  # csv writer, writes lists
+        em = EmailMsg()
+        em.mailtolistfile = temp_csv_file
+        self.assertListEqual(em.to_recipient, RECIPENTS_LIST)
 
